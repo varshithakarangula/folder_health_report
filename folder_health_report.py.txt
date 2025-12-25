@@ -1,0 +1,44 @@
+import os
+from collections import defaultdict
+
+# Change this path to any folder you want to analyze
+FOLDER_PATH = r"C:\Users\YourName\Downloads"
+
+def folder_health_report(path):
+    total_files = 0
+    total_folders = 0
+    total_size = 0
+    file_types = defaultdict(int)
+
+    for root, dirs, files in os.walk(path):
+        total_folders += len(dirs)
+
+        for file in files:
+            total_files += 1
+            file_path = os.path.join(root, file)
+
+            try:
+                size = os.path.getsize(file_path)
+                total_size += size
+            except:
+                continue
+
+            extension = os.path.splitext(file)[1].lower()
+            if extension:
+                file_types[extension] += 1
+            else:
+                file_types["no_extension"] += 1
+
+    print("\n📁 Folder Health Report")
+    print("-" * 30)
+    print("Total folders :", total_folders)
+    print("Total files   :", total_files)
+    print(f"Total size    : {total_size / (1024**2):.2f} MB")
+
+    print("\nFile type distribution:")
+    for ext, count in file_types.items():
+        print(f"{ext} : {count} files")
+
+if __name__ == "__main__":
+    folder_health_report(FOLDER_PATH)
+print("\nReport generated successfully!")
